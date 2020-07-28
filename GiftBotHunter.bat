@@ -1,0 +1,1 @@
+start "GitBotHunter" cmd.exe /k "python main.py"
