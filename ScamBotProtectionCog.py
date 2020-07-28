@@ -18,7 +18,7 @@ class ScamBotProtection(commands.Cog):
         imagehash.average_hash(Image.open('data/scambot_protection/psyonix.jpg'))
     ] #Add extra images to this list
 
-    similarityMatch = 15 #Adjust this number. Lower => Image needs to be more similar to one of the blacklisted avatars
+    similarityMatch = 8 #Adjust this number. Lower => Image needs to be more similar to one of the blacklisted avatars
 
     def __init__(self, bot):
         self.bot = bot
