@@ -25,6 +25,8 @@ This requires you to have installed discord.py, imagehash, Pillow and requests
 
 - Replace your bot token in keys.py
 
+- Create a passport.json file in the data/scambot_protection folder. Open it and put `{}` as its content. Save.
+
 - Invite the bot to your desired server by using this link `https://discord.com/oauth2/authorize?client_id=<YOUR BOT CLIENT ID GOES HERE>&scope=bot`
 
 - Make a role with "Ban Members" perms and assign it to the bot
