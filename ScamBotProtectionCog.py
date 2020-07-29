@@ -33,7 +33,7 @@ class ScamBotProtection(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member):
        await self.runChecks(member)
-
+        
     @commands.Cog.listener()
     async def on_user_update(self, user_before, user_after):
         await self.runChecks(user_after)
@@ -138,16 +138,20 @@ class ScamBotProtection(commands.Cog):
             for guild in self.bot.guilds:
                 try:
                     await guild.ban(discord.Object(id=int(user.id)), reason="Suspected giveaway scam bot")
+
+                    try:
+                        scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
+                        embed = Embed(title="Banned user: {}".format(user),
+                                      description="Banned user __{} ({})__ for suspected giveaway scambot.\n\nNOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in.".format(
+                                          user, user.id),
+                                      colour=0x443a59)
+                        await scambot_channel.send(embed=embed)
+                    except:
+                        pass
+
                 except:
                     pass
 
-                try:
-                    scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
-                    embed = Embed(title="Banned user: {}".format(user), description="Banned user __{}__ for suspected giveaway scambot.".format(user),
-                                         colour=0x443a59)
-                    await scambot_channel.send(embed=embed)
-                except:
-                    pass
         except:
             pass
 

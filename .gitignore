@@ -1,6 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
 .vscode/
 utils/keys.py
+data/scambot_protection/passport.json
 
 ### Python template
 # Byte-compiled / optimized / DLL files
