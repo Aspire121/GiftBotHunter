@@ -10,7 +10,7 @@ For sake of simplicity we will assume you already have a Discord app set up with
 
 This requires you to have installed discord.py, imagehash, Pillow and requests
 
-`pip install requests`
+`pip install -U requests`
 
 `pip install -U Pillow`
 
