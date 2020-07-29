@@ -15,7 +15,8 @@ class ScamBotProtection(commands.Cog):
     scamBotFilter = ["giveaway", "giveaways", "gift", "administration", "rltracker", "psyonix", "(RL)", "gifts", "g1fts"]
     imagesHashes = [
         imagehash.average_hash(Image.open('data/scambot_protection/psyonix-transparent.png')),
-        imagehash.average_hash(Image.open('data/scambot_protection/psyonix.jpg'))
+        imagehash.average_hash(Image.open('data/scambot_protection/psyonix.jpg')),
+        imagehash.average_hash(Image.open('data/scambot_protection/1.jpg'))
     ] #Add extra images to this list
 
     similarityMatch = 8 #Adjust this number. Lower => Image needs to be more similar to one of the blacklisted avatars
