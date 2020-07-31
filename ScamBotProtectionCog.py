@@ -25,11 +25,20 @@ class ScamBotProtection(commands.Cog):
         self.bot = bot
 
         passports = fileIO('data/scambot_protection/passport.json', 'load')
-        for player in passports['users']:
-            key = player
-            value = passports['users'][player]
-            if (value == 1):
-                sharedBot.passports.append(str(key))
+
+        for server in passports:
+            try:
+                for player in passports[server]['users']:
+                    try:
+                        key = player
+                        value = passports[server]['users'][player]
+                        if (value == 1):
+                            sharedBot.passports.append(str(key))
+                    except:
+                        continue
+            except:
+                continue
+
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
