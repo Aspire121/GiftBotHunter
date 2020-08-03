@@ -122,14 +122,16 @@ class ScamBotProtection(commands.Cog):
         compiled_regex = re.compile("|".join(self.regexPatterns))
         array = compiled_regex.findall(username)
         if (len(array) > 0):
-            await self.messageAndBan(member)
-            return True
+            if (not str(member.id) in sharedBot.passports):
+                await self.messageAndBan(member)
+                return True
 
     async def runFuzzyWordsCheck(self, member, username):
         for entry in self.scamBotFilter:
             if(self.similar(username, entry) >= self.similarityRatioPercentFuzzyWords):
-                await self.messageAndBan(member)
-                return True
+                if (not str(member.id) in sharedBot.passports):
+                    await self.messageAndBan(member)
+                    return True
 
     #Messages the user and bans them
     async def messageAndBan(self, member):
