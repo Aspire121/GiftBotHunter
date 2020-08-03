@@ -1,3 +1,4 @@
+from difflib import SequenceMatcher
 from io import BytesIO
 import discord
 from discord import Embed
@@ -10,16 +11,42 @@ import imagehash
 import requests
 import asyncio
 import sharedBot
+import unicodedata
+import re
 
 class ScamBotProtection(commands.Cog):
-    scamBotFilter = ["giveaway", "giveaways", "gift", "administration", "rltracker", "psyonix", "(RL)", "gifts", "g1fts"]
+
+    scamBotFilter = ["giveaway", "giveaways", "gift", "administration", "rltracker", "psyonix", "(rl)", "gifts", "g1fts", "quickselling", "[rl]", "gamersrdy", "rltracker","rlgarage"]
+
     imagesHashes = [
         imagehash.average_hash(Image.open('data/scambot_protection/psyonix-transparent.png')),
         imagehash.average_hash(Image.open('data/scambot_protection/psyonix.jpg')),
         imagehash.average_hash(Image.open('data/scambot_protection/1.jpg'))
     ] #Add extra images to this list
 
+    regexPatterns = [
+        "gift(?:s)?",
+        "giveaway(?:s)?",
+        "bm(?:s)?",
+        "\bgift?",
+        "qu(?:i|)ckselling",
+        "psy(?:(?:0|o))nix",
+        "rl(?: |_|-|)gara(?:s)?"
+        "rl(?: |_|-|)(?:.*)tra(?:cke|de)(?:s)?",
+        "rl(?: |_|-|)(?:.*)supp(?:s)?",
+        "rl(?: |_|-|)(?:.*)mod(?:s)?",
+        "rl(?: |_|-|)(?:.*)hel(?:s)?",
+        "rl(?: |_|-|)(?:.*)ass(?:s)?",
+        "rl(?: |_|-|)(?:.*)(?: |_|-|)giveaway(?:s)?",
+        "rl(?: |_|-|)(?:.*)(?: |_|-|)giveaway(?:s)?",
+        "psy(?:(?:0|o))nix(?: |_|-|)(?:.*)(?: |_|-|)mod(?:s)?",
+        "psy(?:(?:0|o))nix(?: |_|-|)(?:.*)(?: |_|-|)supp(?:s)?",
+        "psy(?:(?:0|o))nix(?: |_|-|)(?:.*)(?: |_|-|)ass(?:s)?"
+    ]
+
+
     similarityMatch = 8 #Adjust this number. Lower => Image needs to be more similar to one of the blacklisted avatars
+    similarityRatioPercentFuzzyWords = 0.75
 
     def __init__(self, bot):
         self.bot = bot
@@ -42,7 +69,8 @@ class ScamBotProtection(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
-       await self.runChecks(member)
+        await self.runChecks(member)
+
         
     @commands.Cog.listener()
     async def on_user_update(self, user_before, user_after):
@@ -50,14 +78,25 @@ class ScamBotProtection(commands.Cog):
 
     async def runChecks(self, member):
         try:
-            username = str(member.name).lower()
-            #Check word filter
+
+            username_lower = str(member.name).lower()
+            username = str((unicodedata.normalize('NFKD', username_lower).encode('ascii', 'ignore')).decode("ascii")).lower()
+
+            #Check exact word filter
             for entry in self.scamBotFilter:
                 if(self.contains_word(username, entry)):
                     #Found a match
                     if(not str(member.id) in sharedBot.passports):
                         await self.messageAndBan(member)
                         return
+
+            #Check Regex pattern matcher
+            if (await self.runRegexFilters(member, username)):
+                return
+
+            #Check Similar string comparison with SequenceMatcher
+            if (await self.runFuzzyWordsCheck(member, username)):
+                return
 
             #Process user avatar and find similarity to the Psyonix images loaded in the self.imageHash list
             try:
@@ -79,6 +118,19 @@ class ScamBotProtection(commands.Cog):
             print(e)
             pass
 
+    async def runRegexFilters(self, member, username):
+        compiled_regex = re.compile("|".join(self.regexPatterns))
+        array = compiled_regex.findall(username)
+        if (len(array) > 0):
+            await self.messageAndBan(member)
+            return True
+
+    async def runFuzzyWordsCheck(self, member, username):
+        for entry in self.scamBotFilter:
+            if(self.similar(username, entry) >= self.similarityRatioPercentFuzzyWords):
+                await self.messageAndBan(member)
+                return True
+
     #Messages the user and bans them
     async def messageAndBan(self, member):
         if (not str(member.id) in sharedBot.passports):
@@ -87,13 +139,14 @@ class ScamBotProtection(commands.Cog):
                                      description="Your account was intercepted by our protection system and you have been banned",
                                      colour=0xFF0000)
                 await member.send(embed=embed)
-                await asyncio.sleep(2);
+                await asyncio.sleep(0.5);
             except:
                 pass
 
             try:
                 await self.globalBan(member)
-            except:
+            except Exception as e:
+                print("Failed to ban {} ({})".format(member, member.id))
                 pass
 
     @commands.group()
@@ -172,3 +225,6 @@ class ScamBotProtection(commands.Cog):
 
     def contains_word(self, s, w):
         return (' ' + w + ' ') in (' ' + s + ' ')
+
+    def similar(self, a, b):
+        return SequenceMatcher(None, a, b).ratio()
