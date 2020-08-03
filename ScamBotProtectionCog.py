@@ -27,7 +27,6 @@ class ScamBotProtection(commands.Cog):
     regexPatterns = [
         "gift(?:s)?",
         "giveaway(?:s)?",
-        "bm(?:s)?",
         "\bgift?",
         "qu(?:i|)ckselling",
         "psy(?:(?:0|o))nix",
@@ -44,12 +43,17 @@ class ScamBotProtection(commands.Cog):
         "psy(?:(?:0|o))nix(?: |_|-|)(?:.*)(?: |_|-|)ass(?:s)?"
     ]
 
+    testNames_two = [
+        "ItsJPBM"
+    ]
 
     similarityMatch = 8 #Adjust this number. Lower => Image needs to be more similar to one of the blacklisted avatars
     similarityRatioPercentFuzzyWords = 0.75
 
     def __init__(self, bot):
         self.bot = bot
+        self.testFuzzyFilters()
+        self.testRegexFilters()
 
         passports = fileIO('data/scambot_protection/passport.json', 'load')
 
@@ -66,6 +70,45 @@ class ScamBotProtection(commands.Cog):
             except:
                 continue
 
+    def testRegexFilters(self):
+        compiled_regex = re.compile("|".join(self.regexPatterns))
+        print("Names found: {}".format(len(self.testNames_two)))
+        counter = 0
+
+        for name in self.testNames_two:
+            username_lower = str(name).lower()
+            username = str(
+                (unicodedata.normalize('NFKD', username_lower).encode('ascii', 'ignore')).decode("ascii")).lower()
+
+            print("Trying to match: {}".format(username))
+            array = compiled_regex.findall(username)
+            if (len(array) > 0):
+                print("Success - Matched {}".format(username))
+                counter += 1
+            else:
+                print("Failed".format(username))
+
+        print("Matched {} / {} patterns".format(counter, len(self.testNames_two)))
+
+    def testFuzzyFilters(self):
+        compiled_regex = re.compile("|".join(self.regexPatterns))
+        print("Names found: {}".format(len(self.testNames_two)))
+        counter = 0
+
+        for name in self.testNames_two:
+            username_lower = str(name).lower()
+            username = str(
+                (unicodedata.normalize('NFKD', username_lower).encode('ascii', 'ignore')).decode("ascii")).lower()
+            print("Trying to match: {}".format(username))
+            splitUsername = username.split()
+
+            for entry in self.scamBotFilter:
+                print("PART: {} | ENTRY: {} | SIMILARITY: {} %".format(username, entry, self.similar(username, entry)))
+
+                if (self.similar(username, entry) >= self.similarityRatioPercentFuzzyWords):
+                    print("Success - Matched {}".format(username))
+                    continue
+        # print("Matched {} / {} patterns".format(counter, len(self.testNames_two)))
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
