@@ -16,7 +16,7 @@ import re
 
 class ScamBotProtection(commands.Cog):
 
-    scamBotFilter = ["giveaway", "giveaways", "gift", "administration", "rltracker", "psyonix", "(rl)", "gifts", "g1fts", "quickselling", "[rl]", "gamersrdy", "rltracker","rlgarage"]
+    scamBotFilter = ["giveaway", "giveaways", "gift", "administration", "rltracker", "psyonix", "gifts", "g1fts", "quickselling", "gamersrdy", "rltracker","rlgarage"]
 
     imagesHashes = [
         imagehash.average_hash(Image.open('data/scambot_protection/psyonix-transparent.png')),
@@ -85,7 +85,7 @@ class ScamBotProtection(commands.Cog):
                 if(self.contains_word(username, entry)):
                     #Found a match
                     if(not str(member.id) in sharedBot.passports):
-                        await self.messageAndBan(member)
+                        await self.messageAndBan(member, "Exact word filter match")
                         return
 
             #Check Regex pattern matcher
@@ -106,7 +106,7 @@ class ScamBotProtection(commands.Cog):
                 for hash in self.imagesHashes:
                     difference = hash - user_hash
                     if(difference < self.similarityMatch):
-                        await self.messageAndBan(member)
+                        await self.messageAndBan(member, "Avatar match")
                         return
             except Exception as e:
                 print(e)
@@ -121,18 +121,18 @@ class ScamBotProtection(commands.Cog):
         array = compiled_regex.findall(username)
         if (len(array) > 0):
             if (not str(member.id) in sharedBot.passports):
-                await self.messageAndBan(member)
+                await self.messageAndBan(member, "Regex match")
                 return True
 
     async def runFuzzyWordsCheck(self, member, username):
         for entry in self.scamBotFilter:
             if(self.similar(username, entry) >= self.similarityRatioPercentFuzzyWords):
                 if (not str(member.id) in sharedBot.passports):
-                    await self.messageAndBan(member)
+                    await self.messageAndBan(member, "Fuzzy word filter")
                     return True
 
     #Messages the user and bans them
-    async def messageAndBan(self, member):
+    async def messageAndBan(self, member, reason=""):
         if (not str(member.id) in sharedBot.passports):
             try:
                 embed = Embed(title="You have been banned",
@@ -144,10 +144,21 @@ class ScamBotProtection(commands.Cog):
                 pass
 
             try:
-                await self.globalBan(member)
+                await self.globalBan(member, reason)
             except Exception as e:
                 print("Failed to ban {} ({})".format(member, member.id))
                 pass
+
+    @commands.group()
+    @commands.check(checks.is_aspire)
+    async def globalunban(self, ctx, userid):
+        for guild in self.bot.guilds:
+            try:
+                await guild.unban(discord.Object(id=int(str(userid))))
+                print("Unbanned in {}".format(guild))
+            except:
+                pass
+        print("Finished")
 
     @commands.group()
     @commands.check(checks.is_mod)
@@ -196,7 +207,7 @@ class ScamBotProtection(commands.Cog):
             await ctx.channel.send("Unbanned and given passport to user: <@{}>.\nThey will now not be intercepted by the scambot filter".format(strippedUser))
 
     #Bans the user in all servers the bot instance is in
-    async def globalBan(self, user):
+    async def globalBan(self, user, reason=""):
         try:
             for guild in self.bot.guilds:
                 try:
@@ -205,8 +216,8 @@ class ScamBotProtection(commands.Cog):
                     try:
                         scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
                         embed = Embed(title="Banned user: {}".format(user),
-                                      description="Banned user __{} ({})__ for suspected giveaway scambot.\n\nNOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in.".format(
-                                          user, user.id),
+                                      description="Banned user __{} ({})__ for suspected giveaway scambot.\n\nReason: {}\nNOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in.".format(
+                                          user, user.id, reason),
                                       colour=0x443a59)
                         await scambot_channel.send(embed=embed)
                     except:

@@ -16,3 +16,10 @@ def is_mod(ctx:discord.message.Message):
         return True
 
     return False
+
+def is_aspire(ctx:discord.message.Message):
+    member = ctx.author # type: discord.Member
+    if (str(member.id) == "137642121673834496"):
+        return True
+
+    return False
