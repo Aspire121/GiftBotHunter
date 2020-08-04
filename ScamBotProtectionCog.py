@@ -156,9 +156,18 @@ class ScamBotProtection(commands.Cog):
             try:
                 await guild.unban(discord.Object(id=int(str(userid))))
                 print("Unbanned in {}".format(guild))
+                try:
+                    scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
+                    embed = Embed(title="Unbanned user: <@{}>".format(userid),
+                                  description="Unbanned user __<@{}> ({})__ .\n\nReason: {}".format(
+                                      userid, userid, "User was found to be a false positive."),
+                                  colour=0xFFDF00)
+                    await scambot_channel.send(embed=embed)
+                except:
+                    pass
             except:
                 pass
-        print("Finished")
+        await ctx.channel.send("Finished global unban.")
 
     @commands.group()
     @commands.check(checks.is_mod)
