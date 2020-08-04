@@ -45,7 +45,7 @@ class ScamBotProtection(commands.Cog):
 
 
     similarityMatch = 8 #Adjust this number. Lower => Image needs to be more similar to one of the blacklisted avatars
-    similarityRatioPercentFuzzyWords = 0.75
+    similarityRatioPercentFuzzyWords = 0.85
 
     def __init__(self, bot):
         self.bot = bot
@@ -93,8 +93,8 @@ class ScamBotProtection(commands.Cog):
                 return
 
             #Check Similar string comparison with SequenceMatcher
-            if (await self.runFuzzyWordsCheck(member, username)):
-                return
+            #if (await self.runFuzzyWordsCheck(member, username)):
+               # return
 
             #Process user avatar and find similarity to the Psyonix images loaded in the self.imageHash list
             try:
