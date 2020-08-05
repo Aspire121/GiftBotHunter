@@ -170,6 +170,25 @@ class ScamBotProtection(commands.Cog):
         await ctx.channel.send("Finished global unban.")
 
     @commands.group()
+    @commands.check(checks.is_aspire)
+    async def globalban(self, ctx, userid):
+        for guild in self.bot.guilds:
+            try:
+                await guild.unban(discord.Object(id=int(str(userid))))
+                print("Banned in {}".format(guild))
+                try:
+                    scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
+                    embed = Embed(title="Banned user: <@{}>".format(userid),
+                                  description="Banned user __<@{}> ({})__ .\n\nReason: {}".format(
+                                      userid, userid, "User was found to be a scam bot.\nNOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in."),
+                                  colour=0x443a59)
+                    await scambot_channel.send(embed=embed)
+                except:
+                    pass
+            except:
+                pass
+        await ctx.channel.send("Finished global unban.")
+    @commands.group()
     @commands.check(checks.is_mod)
     async def passport(self,ctx, userid):
 
