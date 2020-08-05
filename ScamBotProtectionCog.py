@@ -174,7 +174,7 @@ class ScamBotProtection(commands.Cog):
     async def globalban(self, ctx, userid):
         for guild in self.bot.guilds:
             try:
-                await guild.unban(discord.Object(id=int(str(userid))))
+                await guild.ban(discord.Object(id=int(str(userid))), reason="Suspected giveaway scam bot")
                 print("Banned in {}".format(guild))
                 try:
                     scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
