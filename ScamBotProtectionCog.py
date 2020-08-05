@@ -187,7 +187,8 @@ class ScamBotProtection(commands.Cog):
                     pass
             except:
                 pass
-        await ctx.channel.send("Finished global unban.")
+        await ctx.channel.send("Finished global ban.")
+
     @commands.group()
     @commands.check(checks.is_mod)
     async def passport(self,ctx, userid):
