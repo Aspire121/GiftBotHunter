@@ -30,7 +30,7 @@ class ScamBotProtection(commands.Cog):
         "giveaway(?:s)?",
         "\bgift?",
         "qu(?:i|)ckselling",
-        "psy(?:(?:0|o))nix",
+        "psy(?:(?:0|o|))(?:ni|)x",
         "rl(?: |_|-|)gara(?:s)?"
         "rl(?: |_|-|)(?:.*)tra(?:cke|de)(?:s)?",
         "rl(?: |_|-|)(?:.*)supp(?:s)?",
