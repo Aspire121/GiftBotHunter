@@ -31,7 +31,8 @@ class ScamBotProtection(commands.Cog):
         "\bgift?",
         "qu(?:i|)ckselling",
         "psy(?:(?:0|o|))(?:ni|)x",
-        "rl(?: |_|-|)gara(?:s)?"
+        "psy(?:.*)x",
+        "rl(?: |_|-|)gara(?:s)?",
         "rl(?: |_|-|)(?:.*)tra(?:cke|de)(?:s)?",
         "rl(?: |_|-|)(?:.*)supp(?:s)?",
         "rl(?: |_|-|)(?:.*)mod(?:s)?",
