@@ -22,7 +22,8 @@ class ScamBotProtection(commands.Cog):
         imagehash.average_hash(Image.open('data/scambot_protection/psyonix-transparent.png')),
         imagehash.average_hash(Image.open('data/scambot_protection/psyonix.jpg')),
         imagehash.average_hash(Image.open('data/scambot_protection/1.jpg')),
-        imagehash.average_hash(Image.open('data/scambot_protection/2.jpg'))
+        imagehash.average_hash(Image.open('data/scambot_protection/2.jpg')),
+        imagehash.average_hash(Image.open('data/scambot_protection/3.png'))
     ] #Add extra images to this list
 
     regexPatterns = [
