@@ -1,3 +1,4 @@
+from datetime import datetime
 from difflib import SequenceMatcher
 from io import BytesIO
 import discord
@@ -13,6 +14,7 @@ import asyncio
 import sharedBot
 import unicodedata
 import re
+import enchant
 
 class ScamBotProtection(commands.Cog):
 
@@ -26,6 +28,7 @@ class ScamBotProtection(commands.Cog):
         imagehash.average_hash(Image.open('data/scambot_protection/3.png')),
         imagehash.average_hash(Image.open('data/scambot_protection/4.png'))
     ] #Add extra images to this list
+    Dictionary = enchant.Dict("en_US")
 
     regexPatterns = [
         "gift(?:s)?",
@@ -69,6 +72,7 @@ class ScamBotProtection(commands.Cog):
             except:
                 continue
 
+
     @commands.Cog.listener()
     async def on_member_join(self, member):
         await self.runChecks(member)
@@ -96,6 +100,9 @@ class ScamBotProtection(commands.Cog):
             if (await self.runRegexFilters(member, username)):
                 return
 
+            if (await self.runDictionaryAvatarCreationdate(member, username)):
+                return
+
             #Check Similar string comparison with SequenceMatcher
             #if (await self.runFuzzyWordsCheck(member, username)):
                # return
@@ -119,6 +126,26 @@ class ScamBotProtection(commands.Cog):
         except Exception as e:
             print(e)
             pass
+
+    async def runDictionaryAvatarCreationdate(self, member, username):
+        username_split = username.split(" ")
+        InitialValue = True
+
+        for word in username_split:
+            InitialValue = InitialValue and self.Dictionary.check(word)
+
+        if(InitialValue):
+            #All the words are in a dictionary, set off a flag.
+            #Check avatar and Join date
+            createdAt = member.created_at
+            difference = (datetime.now() - createdAt).days
+            if(difference < 5):
+                #Account is less than 5 days old.
+                if(member.avatar == None):
+                    #No avatar, it's a scam bot.
+                    #Ban
+                    await self.messageAndBan(member, "Avatar and name check")
+                    return True
 
     async def runRegexFilters(self, member, username):
         compiled_regex = re.compile("|".join(self.regexPatterns))

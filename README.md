@@ -8,7 +8,7 @@ Prefix for the bot is `>`
 
 For sake of simplicity we will assume you already have a Discord app set up with a bot attached to it in the [Discord dev portal](https://discord.com/developers/) and Python 3.8 installed on your machine.
 
-This requires you to have installed discord.py, imagehash, Pillow and requests
+This requires you to have installed discord.py, imagehash, Pillow, requests and Pyenchant
 
 `pip install -U requests`
 
@@ -18,6 +18,7 @@ This requires you to have installed discord.py, imagehash, Pillow and requests
 
 `pip install -U imagehash`
 
+`pip install -U pyenchant`
 
 - Clone this repository
 
