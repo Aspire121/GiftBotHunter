@@ -30,6 +30,9 @@ class ScamBotProtection(commands.Cog):
     ] #Add extra images to this list
     Dictionary = enchant.Dict("en_US")
 
+    #Define an owner guild for Debug messages and extra info (it's the bot owner's guild)
+    ownerGuildID = "371935977196879872"
+
     regexPatterns = [
         "gift(?:s)?",
         "giveaway(?:s)?",
@@ -274,10 +277,15 @@ class ScamBotProtection(commands.Cog):
                     await guild.ban(discord.Object(id=int(user.id)), reason="Suspected giveaway scam bot")
 
                     try:
+                        description_string = "Banned user __{} ({})__ for suspected giveaway scambot.\n\n__Creation date:__ {}\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
+                                          user, user.id, str(user.created_at), reason)
+                        if(str(guild.id) == str(self.ownerGuildID)):
+                            description_string = "Banned user __{} ({})__ for suspected giveaway scambot.\n\n__Creation date:__ {}\n__Original Discord:__ {}\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
+                                user, user.id, str(user.created_at), str(user.guild), reason)
+
                         scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
                         embed = Embed(title="Banned user: {}".format(user),
-                                      description="Banned user __{} ({})__ for suspected giveaway scambot.\n\n__Creation date:__ {}\n__Original Discord:__ {}\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
-                                          user, user.id, str(user.created_at), str(user.guild), reason),
+                                      description=description_string,
                                       colour=0x443a59)
                         embed.set_thumbnail(url=user.avatar_url)
                         await scambot_channel.send(embed=embed)
