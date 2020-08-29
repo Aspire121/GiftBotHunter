@@ -139,8 +139,8 @@ class ScamBotProtection(commands.Cog):
             #Check avatar and Join date
             createdAt = member.created_at
             difference = (datetime.now() - createdAt).days
-            if(difference < 5):
-                #Account is less than 5 days old.
+            if(difference < 6):
+                #Account is less than 6 days old.
                 if(member.avatar == None):
                     #No avatar, it's a scam bot.
                     #Ban
@@ -276,9 +276,10 @@ class ScamBotProtection(commands.Cog):
                     try:
                         scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
                         embed = Embed(title="Banned user: {}".format(user),
-                                      description="Banned user __{} ({})__ for suspected giveaway scambot.\n\nReason: {}\nNOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in.".format(
-                                          user, user.id, reason),
+                                      description="Banned user __{} ({})__ for suspected giveaway scambot.\n__Creation date:__ {}\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
+                                          user, user.id, str(user.created_at), reason),
                                       colour=0x443a59)
+                        embed.set_thumbnail(url=user.avatar_url)
                         await scambot_channel.send(embed=embed)
                     except:
                         pass
