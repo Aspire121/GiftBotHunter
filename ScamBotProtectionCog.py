@@ -18,7 +18,7 @@ import enchant
 
 class ScamBotProtection(commands.Cog):
 
-    scamBotFilter = ["giveaway", "giveaways", "gift", "administration", "rltracker", "psyonix", "gifts", "g1fts", "quickselling", "gamersrdy", "rltracker","rlgarage"]
+    scamBotFilter = ["giveaway", "giveaways", "gift", "administration", "rltracker", "psyonix", "gifts", "g1fts", "quickselling", "gamersrdy", "rltracker","rlgarage", "rewards"]
 
     imagesHashes = [
         imagehash.average_hash(Image.open('data/scambot_protection/psyonix-transparent.png')),
@@ -26,7 +26,8 @@ class ScamBotProtection(commands.Cog):
         imagehash.average_hash(Image.open('data/scambot_protection/1.jpg')),
         imagehash.average_hash(Image.open('data/scambot_protection/2.jpg')),
         imagehash.average_hash(Image.open('data/scambot_protection/3.png')),
-        imagehash.average_hash(Image.open('data/scambot_protection/4.png'))
+        imagehash.average_hash(Image.open('data/scambot_protection/4.png')),
+        imagehash.average_hash(Image.open('data/scambot_protection/5.png'))
     ] #Add extra images to this list
     Dictionary = enchant.Dict("en_US")
 
@@ -45,6 +46,7 @@ class ScamBotProtection(commands.Cog):
         "rl(?: |_|-|)(?:.*)supp(?:s)?",
         "rl(?: |_|-|)(?:.*)mod(?:s)?",
         "rl(?: |_|-|)(?:.*)hel(?:s)?",
+        "rl(?: |_|-|)(?:.*)r(?:.*)w(?:.*)?",
         "rl(?: |_|-|)(?:.*)ass(?:s)?",
         "rl(?: |_|-|)(?:.*)(?: |_|-|)giveaway(?:s)?",
         "rl(?: |_|-|)(?:.*)(?: |_|-|)giveaway(?:s)?",
@@ -173,7 +175,7 @@ class ScamBotProtection(commands.Cog):
                                      description="Your account was intercepted by our protection system and you have been banned",
                                      colour=0xFF0000)
                 await member.send(embed=embed)
-                await asyncio.sleep(0.5);
+                await asyncio.sleep(0.5)
             except:
                 pass
 
