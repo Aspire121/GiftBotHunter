@@ -26,8 +26,7 @@ class ScamBotProtection(commands.Cog):
         imagehash.average_hash(Image.open('data/scambot_protection/1.jpg')),
         imagehash.average_hash(Image.open('data/scambot_protection/2.jpg')),
         imagehash.average_hash(Image.open('data/scambot_protection/3.png')),
-        imagehash.average_hash(Image.open('data/scambot_protection/4.png')),
-        imagehash.average_hash(Image.open('data/scambot_protection/5.png'))
+        imagehash.average_hash(Image.open('data/scambot_protection/4.png'))
     ] #Add extra images to this list
     Dictionary = enchant.Dict("en_US")
 
@@ -57,7 +56,7 @@ class ScamBotProtection(commands.Cog):
 
 
     similarityMatch = 8 #Adjust this number. Lower => Image needs to be more similar to one of the blacklisted avatars
-    similarityRatioPercentFuzzyWords = 0.85
+    similarityRatioPercentFuzzyWords = 0.90
 
     def __init__(self, bot):
         self.bot = bot
