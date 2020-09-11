@@ -56,7 +56,7 @@ class ScamBotProtection(commands.Cog):
 
 
     similarityMatch = 8 #Adjust this number. Lower => Image needs to be more similar to one of the blacklisted avatars
-    similarityRatioPercentFuzzyWords = 0.90
+    similarityRatioPercentFuzzyWords = 0.85
 
     def __init__(self, bot):
         self.bot = bot
