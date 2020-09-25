@@ -121,8 +121,11 @@ class ScamBotProtection(commands.Cog):
                 for hash in self.imagesHashes:
                     difference = hash - user_hash
                     if(difference < self.similarityMatch):
-                        await self.messageAndBan(member, "Avatar match")
-                        return
+                        createdAt = member.created_at
+                        difference = (datetime.now() - createdAt).days
+                        if (difference < 6):
+                            await self.messageAndBan(member, "Avatar match")
+                            return
             except Exception as e:
                 print(e)
                 pass
@@ -278,10 +281,10 @@ class ScamBotProtection(commands.Cog):
                     await guild.ban(discord.Object(id=int(user.id)), reason="Suspected giveaway scam bot")
 
                     try:
-                        description_string = "Banned user __{} ({})__ for suspected giveaway scambot.\n\n__Creation date:__ {}\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
+                        description_string = "Banned user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Creation date:__ {}\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
                                           user, user.id, str(user.created_at), reason)
                         if(str(guild.id) == str(self.ownerGuildID)):
-                            description_string = "Banned user __{} ({})__ for suspected giveaway scambot.\n\n__Creation date:__ {}\n__Original Discord:__ {}\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
+                            description_string = "Banned user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Creation date:__ {}\n__Original Discord:__ {}\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
                                 user, user.id, str(user.created_at), str(user.guild), reason)
 
                         scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
@@ -292,7 +295,7 @@ class ScamBotProtection(commands.Cog):
                         await scambot_channel.send(embed=embed)
                     except:
                         try:
-                            description_string = "\*Banned user __{} ({})__ for suspected giveaway scambot.\n\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
+                            description_string = "\*Banned user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
                                 user, user.id, reason)
 
                             scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
