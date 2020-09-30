@@ -18,7 +18,7 @@ import enchant
 
 class ScamBotProtection(commands.Cog):
 
-    scamBotFilter = ["giveaway", "giveaways", "gift", "administration", "rltracker", "psyonix", "gifts", "g1fts", "quickselling", "gamersrdy", "rltracker","rlgarage", "rewards"]
+    scamBotFilter = ["giveaway", "giveaways", "gift", "administration", "rltracker", "psyonix", "gifts", "g1fts", "quickselling", "gamersrdy", "rltracker","rlgarage", "rewards", "prizes"]
 
     imagesHashes = [
         imagehash.average_hash(Image.open('data/scambot_protection/psyonix-transparent.png')),
