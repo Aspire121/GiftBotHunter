@@ -43,6 +43,7 @@ class ScamBotProtection(commands.Cog):
         "rl(?: |_|-|)gara(?:s)?",
         "rl(?: |_|-|)(?:.*)tra(?:cke|de)(?:s)?",
         "rl(?: |_|-|)(?:.*)supp(?:s)?",
+        "rl(?: |_|-|)(?:.*)prize(?:s)?"
         "rl(?: |_|-|)(?:.*)mod(?:s)?",
         "rl(?: |_|-|)(?:.*)hel(?:s)?",
         "rl(?: |_|-|)(?:.*)rew(?:.*)?",
