@@ -2,6 +2,9 @@ import discord
 from discord.ext import commands
 
 # TODO: Obvious todo
+intents = discord.Intents.default()
+intents.members = True
+
 description = '''GiftBot Hunter'''
 bot = commands.Bot(command_prefix=">", description=description, case_insensitive=False)
 bot.remove_command("help")
@@ -13,7 +16,7 @@ from ScamBotProtectionCog import ScamBotProtection
 
 @bot.event
 async def on_ready():
-    print("GiftBotHunter 1.8 is ready!")
+    print("GiftBotHunter 1.9 is ready!")
     print("The bot is currently protecting {} servers".format(len(bot.guilds)))
     for guild in bot.guilds:
 
