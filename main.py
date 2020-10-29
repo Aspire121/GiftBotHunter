@@ -6,7 +6,7 @@ intents = discord.Intents.default()
 intents.members = True
 
 description = '''GiftBot Hunter'''
-bot = commands.Bot(command_prefix=">", description=description, case_insensitive=False)
+bot = commands.Bot(command_prefix=">", description=description, case_insensitive=False, intents=intents)
 bot.remove_command("help")
 
 # Update the sharedBot so other modules can use it
