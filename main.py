@@ -4,6 +4,7 @@ from discord.ext import commands
 # TODO: Obvious todo
 intents = discord.Intents.default()
 intents.members = True
+intents.presences = False
 
 description = '''GiftBot Hunter'''
 bot = commands.Bot(command_prefix=">", description=description, case_insensitive=False, intents=intents)

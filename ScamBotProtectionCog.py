@@ -18,7 +18,7 @@ import enchant
 
 class ScamBotProtection(commands.Cog):
 
-    scamBotFilter = ["giveaway", "giveaways", "gift", "administration", "rltracker", "psyonix", "gifts", "g1fts", "quickselling", "gamersrdy", "rltracker","rlgarage", "rewards", "prizes", "rocket league bot", "rocket league b0t"]
+    scamBotFilter = ["rl", "giveaway", "giveaways", "gift", "administration", "rltracker", "psyonix", "PSYONIX", "gifts", "g1fts", "quickselling", "gamersrdy", "rltracker","rlgarage", "rewards", "prizes"]
 
     imagesHashes = [
         imagehash.average_hash(Image.open('data/scambot_protection/psyonix-transparent.png')),
@@ -26,7 +26,8 @@ class ScamBotProtection(commands.Cog):
         imagehash.average_hash(Image.open('data/scambot_protection/1.jpg')),
         imagehash.average_hash(Image.open('data/scambot_protection/2.jpg')),
         imagehash.average_hash(Image.open('data/scambot_protection/3.png')),
-        imagehash.average_hash(Image.open('data/scambot_protection/4.png'))
+        imagehash.average_hash(Image.open('data/scambot_protection/4.png')),
+        imagehash.average_hash(Image.open('data/scambot_protection/6.jpg'))
     ] #Add extra images to this list
     Dictionary = enchant.Dict("en_US")
 
@@ -94,24 +95,31 @@ class ScamBotProtection(commands.Cog):
             username = str((unicodedata.normalize('NFKD', username_lower).encode('ascii', 'ignore')).decode("ascii")).lower()
 
             #Check exact word filter
-            for entry in self.scamBotFilter:
-                if(self.contains_word(username, entry)):
-                    #Found a match
-                    if(not str(member.id) in sharedBot.passports):
-                        await self.messageAndBan(member, "Exact word filter match")
-                        return
+            try:
+                for entry in self.scamBotFilter:
+                    if(self.contains_word(username, entry)):
+                        #Found a match
+                        if(not str(member.id) in sharedBot.passports):
+                            await self.messageAndBan(member, "Exact word filter match")
+                            return
 
+            except Exception as e:
+                print("Error in exact filter match: {}".format(e))
             #Check Regex pattern matcher
-            if (await self.runRegexFilters(member, username)):
-                return
+            try:
+                if (await self.runRegexFilters(member, username)):
+                    return
+            except Exception as e:
+                print("Error in regex filter match: {}".format(e))
 
-            if (await self.runDictionaryAvatarCreationdate(member, username)):
-                return
-
+            try:
+                if (await self.runDictionaryAvatarCreationdate(member, username)):
+                    return
             #Check Similar string comparison with SequenceMatcher
             #if (await self.runFuzzyWordsCheck(member, username)):
                # return
-
+            except Exception as e:
+                print("Error in avatar dictionary filter match: {}".format(e))
             #Process user avatar and find similarity to the Psyonix images loaded in the self.imageHash list
             try:
                 with requests.get(member.avatar_url) as r:
@@ -130,7 +138,6 @@ class ScamBotProtection(commands.Cog):
             except Exception as e:
                 print(e)
                 pass
-
         except Exception as e:
             print(e)
             pass
@@ -176,6 +183,23 @@ class ScamBotProtection(commands.Cog):
             try:
                 embed = Embed(title="You have been banned",
                                      description="Your account was intercepted by our protection system and you have been banned",
+                                     colour=0xFF0000)
+                await member.send(embed=embed)
+                await asyncio.sleep(0.5)
+            except:
+                pass
+
+            try:
+                await self.globalBan(member, reason)
+            except Exception as e:
+                print("Failed to ban {} ({})".format(member, member.id))
+                pass
+
+    async def messageAndKick(self, member, reason=""):
+        if (not str(member.id) in sharedBot.passports):
+            try:
+                embed = Embed(title="You have been kicked",
+                                     description="Your account was intercepted by our protection system and you have been kicked",
                                      colour=0xFF0000)
                 await member.send(embed=embed)
                 await asyncio.sleep(0.5)
