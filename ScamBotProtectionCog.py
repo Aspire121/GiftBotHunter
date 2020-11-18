@@ -100,8 +100,11 @@ class ScamBotProtection(commands.Cog):
                     if(self.contains_word(username, entry)):
                         #Found a match
                         if(not str(member.id) in sharedBot.passports):
-                            await self.messageAndBan(member, "Exact word filter match")
-                            return
+                            createdAt = member.created_at
+                            difference = (datetime.now() - createdAt).days
+                            if (difference < 14):
+                                await self.messageAndBan(member, "Exact word filter match")
+                                return
 
             except Exception as e:
                 print("Error in exact filter match: {}".format(e))
