@@ -162,7 +162,7 @@ class ScamBotProtection(commands.Cog):
                 if(member.avatar == None):
                     #No avatar, it's a scam bot.
                     #Ban
-                    await self.messageAndBan(member, "Avatar and name check")
+                    await self.messageAndBan(member, "Avatar and name check (+ Account less than a week old)")
                     return True
 
     async def runRegexFilters(self, member, username):
@@ -212,7 +212,7 @@ class ScamBotProtection(commands.Cog):
             try:
                 await self.globalBan(member, reason)
             except Exception as e:
-                print("Failed to ban {} ({})".format(member, member.id))
+                print("Failed to kick {} ({})".format(member, member.id))
                 pass
 
     @commands.group()
