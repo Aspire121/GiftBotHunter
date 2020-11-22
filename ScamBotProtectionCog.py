@@ -170,8 +170,11 @@ class ScamBotProtection(commands.Cog):
         array = compiled_regex.findall(username)
         if (len(array) > 0):
             if (not str(member.id) in sharedBot.passports):
-                await self.messageAndBan(member, "Regex match")
-                return True
+                createdAt = member.created_at
+                difference = (datetime.now() - createdAt).days
+                if (difference < 14):
+                    await self.messageAndBan(member, "Regex match")
+                    return True
 
     async def runFuzzyWordsCheck(self, member, username):
         for entry in self.scamBotFilter:
