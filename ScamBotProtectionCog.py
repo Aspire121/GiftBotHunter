@@ -196,26 +196,25 @@ class ScamBotProtection(commands.Cog):
                 pass
 
             try:
-                await self.globalBan(member, reason)
+                await self.globalBan(member, reason, member.guild)
             except Exception as e:
                 print("Failed to ban {} ({})".format(member, member.id))
                 pass
 
-    async def messageAndKick(self, member, reason=""):
-        if (not str(member.id) in sharedBot.passports):
+    @commands.group()
+    @commands.check(checks.is_aspire)
+    async def globalmessage(self, ctx, *, message):
+        for guild in self.bot.guilds:
             try:
-                embed = Embed(title="You have been kicked",
-                                     description="Your account was intercepted by our protection system and you have been kicked",
-                                     colour=0xFF0000)
-                await member.send(embed=embed)
-                await asyncio.sleep(0.5)
+                try:
+                    scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
+                    embed = Embed(title="GiftbotHunter system message",
+                                  description="{}".format(message),
+                                  colour=0xFFD700)
+                    await scambot_channel.send(embed=embed)
+                except:
+                    pass
             except:
-                pass
-
-            try:
-                await self.globalBan(member, reason)
-            except Exception as e:
-                print("Failed to kick {} ({})".format(member, member.id))
                 pass
 
     @commands.group()
@@ -240,7 +239,7 @@ class ScamBotProtection(commands.Cog):
 
     @commands.group()
     @commands.check(checks.is_aspire)
-    async def globalban(self, ctx, userid):
+    async def globalban(self, ctx, userid, priorityserver=None):
         for guild in self.bot.guilds:
             try:
                 await guild.ban(discord.Object(id=int(str(userid))), reason="Suspected giveaway scam bot")
@@ -305,11 +304,20 @@ class ScamBotProtection(commands.Cog):
             await ctx.channel.send("Unbanned and given passport to user: <@{}>.\nThey will now not be intercepted by the scambot filter".format(strippedUser))
 
     #Bans the user in all servers the bot instance is in
-    async def globalBan(self, user, reason=""):
+    async def globalBan(self, user, reason="", priorityserver=None):
+        if (priorityserver != None):
+            try:
+                await priorityserver.ban(discord.Object(id=int(user.id)), reason="Suspected giveaway scam bot")
+            except:
+                pass
+
         try:
             for guild in self.bot.guilds:
                 try:
-                    await guild.ban(discord.Object(id=int(user.id)), reason="Suspected giveaway scam bot")
+                    try:
+                        await guild.ban(discord.Object(id=int(user.id)), reason="Suspected giveaway scam bot")
+                    except:
+                        pass
 
                     try:
                         description_string = "Banned user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Creation date:__ {}\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
