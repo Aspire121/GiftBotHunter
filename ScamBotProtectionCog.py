@@ -203,7 +203,7 @@ class ScamBotProtection(commands.Cog):
 
     @commands.group()
     @commands.check(checks.is_aspire)
-    async def globalmessage(self, ctx, *, message):
+    async def globalmessage(self, ctx, message):
         for guild in self.bot.guilds:
             try:
                 try:
