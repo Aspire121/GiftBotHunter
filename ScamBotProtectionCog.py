@@ -208,8 +208,10 @@ class ScamBotProtection(commands.Cog):
             try:
                 try:
                     scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
+                    split_lines = message.split("\\n")
+                    string_final = ('\n').join(split_lines)
                     embed = Embed(title="GiftbotHunter system message",
-                                  description="{}".format(message),
+                                  description=string_final,
                                   colour=0xFFD700)
                     await scambot_channel.send(embed=embed)
                 except:
