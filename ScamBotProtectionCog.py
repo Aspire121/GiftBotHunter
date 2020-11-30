@@ -35,6 +35,7 @@ class ScamBotProtection(commands.Cog):
     ownerGuildID = "371935977196879872"
 
     regexPatterns = [
+        "rocket(?: |_|-|)league(?: |_|-|)bot",
         "gift(?:s)?",
         "giveaway(?:s)?",
         "\bgift?",
