@@ -18,7 +18,7 @@ import enchant
 
 class ScamBotProtection(commands.Cog):
 
-    scamBotFilter = ["rl", "giveaway", "giveaways", "gift", "administration", "rltracker", "psyonix", "PSYONIX", "gifts", "g1fts", "quickselling", "gamersrdy", "rltracker","rlgarage", "rewards", "prizes"]
+    scamBotFilter = ["rl", "rlcs", "giveaway", "giveaways", "gift", "administration", "rltracker", "psyonix", "gifts", "g1fts", "quickselling", "gamersrdy", "rltracker","rlgarage", "rewards"]
 
     imagesHashes = [
         imagehash.average_hash(Image.open('data/scambot_protection/psyonix-transparent.png')),
@@ -45,6 +45,7 @@ class ScamBotProtection(commands.Cog):
         "rocket(?: |_|-|)league(?: |_|-|)bot",
         "gift(?:s)?",
         "giveaway(?:s)?",
+        "reward(?:s)?",
         "\bgift?",
         "qu(?:i|)ckselling",
         "psy(?:(?:0|o|))(?:ni|)x",
@@ -61,7 +62,11 @@ class ScamBotProtection(commands.Cog):
         "rl(?: |_|-|)(?:.*)(?: |_|-|)giveaway(?:s)?",
         "psy(?:(?:0|o))nix(?: |_|-|)(?:.*)(?: |_|-|)mod(?:s)?",
         "psy(?:(?:0|o))nix(?: |_|-|)(?:.*)(?: |_|-|)supp(?:s)?",
-        "psy(?:(?:0|o))nix(?: |_|-|)(?:.*)(?: |_|-|)ass(?:s)?"
+        "psy(?:(?:0|o))nix(?: |_|-|)(?:.*)(?: |_|-|)ass(?:s)?",
+        "prize(?:s)?",
+        "rlcs",
+        "giveaway(?:s)?"
+
     ]
 
 
@@ -102,6 +107,8 @@ class ScamBotProtection(commands.Cog):
             username_lower = str(member.name).lower()
             username = str((unicodedata.normalize('NFKD', username_lower).encode('ascii', 'ignore')).decode("ascii")).lower()
 
+            username_unspaced = str(
+                (unicodedata.normalize('NFKD', username_lower).encode('ascii', 'ignore')).decode("ascii")).replace(" ","").lower()
             #Check exact word filter
             try:
                 for entry in self.scamBotFilter:
@@ -118,7 +125,7 @@ class ScamBotProtection(commands.Cog):
                 print("Error in exact filter match: {}".format(e))
             #Check Regex pattern matcher
             try:
-                if (await self.runRegexFilters(member, username)):
+                if (await self.runRegexFilters(member, username_unspaced)):
                     return
             except Exception as e:
                 print("Error in regex filter match: {}".format(e))
