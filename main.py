@@ -17,14 +17,15 @@ from ScamBotProtectionCog import ScamBotProtection
 
 @bot.event
 async def on_ready():
+    totalMembers = 0
     print("GiftBotHunter 1.92 is ready!")
     print("The bot is currently protecting {} servers".format(len(bot.guilds)))
     for guild in bot.guilds:
-
+        totalMembers += len(guild.members)
         owner = bot.get_user(int(guild.owner_id))
         print("Guild name: {} | Owner: {}".format(guild, owner ))
-    pass
 
+    print("Total Members: {}".format(totalMembers))
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown) or isinstance(ctx.channel, discord.DMChannel):
