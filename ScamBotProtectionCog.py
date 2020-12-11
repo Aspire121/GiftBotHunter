@@ -117,9 +117,9 @@ class ScamBotProtection(commands.Cog):
                         if(not str(member.id) in sharedBot.passports):
                             createdAt = member.created_at
                             difference = (datetime.now() - createdAt).days
-                            if (difference < 14):
-                                await self.messageAndBan(member, "Exact word filter match")
-                                return
+
+                            await self.messageAndBan(member, "Exact word filter match")
+                            return
 
             except Exception as e:
                 print("Error in exact filter match: {}".format(e))
@@ -150,9 +150,9 @@ class ScamBotProtection(commands.Cog):
                     if(difference < self.similarityMatch):
                         createdAt = member.created_at
                         difference = (datetime.now() - createdAt).days
-                        if (difference < 6):
-                            await self.messageAndBan(member, "Avatar match")
-                            return
+
+                        await self.messageAndBan(member, "Avatar match")
+                        return
             except Exception as e:
                 print(e)
                 pass
@@ -172,8 +172,8 @@ class ScamBotProtection(commands.Cog):
             #Check avatar and Join date
             createdAt = member.created_at
             difference = (datetime.now() - createdAt).days
-            if(difference < 6):
-                #Account is less than 6 days old.
+            if(difference < 10):
+                #Account is less than 10 days old.
                 if(member.avatar == None):
                     #No avatar, it's a scam bot.
                     #Ban
@@ -187,9 +187,9 @@ class ScamBotProtection(commands.Cog):
             if (not str(member.id) in sharedBot.passports):
                 createdAt = member.created_at
                 difference = (datetime.now() - createdAt).days
-                if (difference < 14):
-                    await self.messageAndBan(member, "Regex match")
-                    return True
+
+                await self.messageAndBan(member, "Regex match")
+                return True
 
     async def runFuzzyWordsCheck(self, member, username):
         for entry in self.scamBotFilter:
