@@ -35,6 +35,7 @@ class ScamBotProtection(commands.Cog):
         imagehash.average_hash(Image.open('data/scambot_protection/11.jpg')),
         imagehash.average_hash(Image.open('data/scambot_protection/12.jpg')),
         imagehash.average_hash(Image.open('data/scambot_protection/13.jpg')),
+        imagehash.average_hash(Image.open('data/scambot_protection/14.jpg'))
     ] #Add extra images to this list
     Dictionary = enchant.Dict("en_US")
 
@@ -43,6 +44,7 @@ class ScamBotProtection(commands.Cog):
 
     regexPatterns = [
         "rocket(?: |_|-|)league(?: |_|-|)bot",
+        "rocket(?: |_|-|)league"
         "gift(?:s)?",
         "giveaway(?:s)?",
         "reward(?:s)?",
