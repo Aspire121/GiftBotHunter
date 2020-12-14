@@ -34,7 +34,8 @@ class ScamBotProtection(commands.Cog):
         imagehash.average_hash(Image.open('data/scambot_protection/10.jpg')),
         imagehash.average_hash(Image.open('data/scambot_protection/11.jpg')),
         imagehash.average_hash(Image.open('data/scambot_protection/12.jpg')),
-        imagehash.average_hash(Image.open('data/scambot_protection/13.jpg'))
+        imagehash.average_hash(Image.open('data/scambot_protection/13.jpg')),
+        imagehash.average_hash(Image.open('data/scambot_protection/15.png'))
     ] #Add extra images to this list
     Dictionary = enchant.Dict("en_US")
 
@@ -70,8 +71,7 @@ class ScamBotProtection(commands.Cog):
 
     ]
 
-
-    similarityMatch = 8 #Adjust this number. Lower => Image needs to be more similar to one of the blacklisted avatars
+    similarityMatch = 7 #Adjust this number. Lower => Image needs to be more similar to one of the blacklisted avatars
     similarityRatioPercentFuzzyWords = 0.85
 
     def __init__(self, bot):
@@ -118,9 +118,9 @@ class ScamBotProtection(commands.Cog):
                         if(not str(member.id) in sharedBot.passports):
                             createdAt = member.created_at
                             difference = (datetime.now() - createdAt).days
-
-                            await self.messageAndBan(member, "Exact word filter match")
-                            return
+                            if(difference < 365):
+                                await self.messageAndBan(member, "Exact word filter match")
+                                return
 
             except Exception as e:
                 print("Error in exact filter match: {}".format(e))
@@ -151,9 +151,9 @@ class ScamBotProtection(commands.Cog):
                     if(difference < self.similarityMatch):
                         createdAt = member.created_at
                         difference = (datetime.now() - createdAt).days
-
-                        await self.messageAndBan(member, "Avatar match")
-                        return
+                        if (difference < 365):
+                            await self.messageAndBan(member, "Avatar match")
+                            return
             except Exception as e:
                 print(e)
                 pass
@@ -188,9 +188,9 @@ class ScamBotProtection(commands.Cog):
             if (not str(member.id) in sharedBot.passports):
                 createdAt = member.created_at
                 difference = (datetime.now() - createdAt).days
-
-                await self.messageAndBan(member, "Regex match")
-                return True
+                if (difference < 365):
+                    await self.messageAndBan(member, "Regex match")
+                    return True
 
     async def runFuzzyWordsCheck(self, member, username):
         for entry in self.scamBotFilter:
