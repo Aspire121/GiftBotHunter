@@ -49,6 +49,7 @@ class ScamBotProtection(commands.Cog):
         "gift(?:s)?",
         "giveaway(?:s)?",
         "reward(?:s)?",
+        "code(?:s)?",
         "\bgift?",
         "qu(?:i|)ckselling",
         "psy(?:(?:0|o|))(?:ni|)x",
