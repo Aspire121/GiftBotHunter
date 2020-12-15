@@ -18,7 +18,7 @@ from ScamBotProtectionCog import ScamBotProtection
 @bot.event
 async def on_ready():
     totalMembers = 0
-    print("GiftBotHunter 1.92 is ready!")
+    print("GiftBotHunter 1.95 is ready!")
     print("The bot is currently protecting {} servers".format(len(bot.guilds)))
     for guild in bot.guilds:
         totalMembers += len(guild.members)

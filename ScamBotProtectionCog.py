@@ -33,6 +33,7 @@ class ScamBotProtection(commands.Cog):
         imagehash.average_hash(Image.open('data/scambot_protection/9.jpg')),
         imagehash.average_hash(Image.open('data/scambot_protection/10.jpg')),
         imagehash.average_hash(Image.open('data/scambot_protection/11.jpg')),
+        imagehash.average_hash(Image.open('data/scambot_protection/11.jpg')),
         imagehash.average_hash(Image.open('data/scambot_protection/12.jpg')),
         imagehash.average_hash(Image.open('data/scambot_protection/13.jpg')),
         imagehash.average_hash(Image.open('data/scambot_protection/15.png')),
@@ -106,7 +107,6 @@ class ScamBotProtection(commands.Cog):
 
     async def runChecks(self, member):
         try:
-
             username_lower = str(member.name).lower()
             username = str((unicodedata.normalize('NFKD', username_lower).encode('ascii', 'ignore')).decode("ascii")).lower()
 
@@ -132,6 +132,12 @@ class ScamBotProtection(commands.Cog):
                     return
             except Exception as e:
                 print("Error in regex filter match: {}".format(e))
+
+            try:
+                if (await self.runCreationDateJulyCheck(member, username)):
+                    return
+            except Exception as e:
+                print("Error in creation date kick: {}".format(e))
 
             try:
                 if (await self.runDictionaryAvatarCreationdate(member, username)):
@@ -162,6 +168,20 @@ class ScamBotProtection(commands.Cog):
         except Exception as e:
             print(e)
             pass
+
+    async def runCreationDateJulyCheck(self, member, username):
+        username_split = username.split(" ")
+        InitialValue = True
+
+        createdAt = member.created_at
+        d1 = datetime.date(2020, 7, 2)
+        d2 = datetime.date(2020, 7, 14)
+        if(d1 < createdAt < d2):
+            try:
+                await self.messageAndKick(member, "Date check")
+                return True
+            except:
+                pass
 
     async def runDictionaryAvatarCreationdate(self, member, username):
         username_split = username.split(" ")
@@ -217,6 +237,23 @@ class ScamBotProtection(commands.Cog):
                 await self.globalBan(member, reason, member.guild)
             except Exception as e:
                 print("Failed to ban {} ({})".format(member, member.id))
+                pass
+
+    async def messageAndKick(self, member, reason=""):
+        if (not str(member.id) in sharedBot.passports):
+            try:
+                embed = Embed(title="You have been kicked",
+                                     description="Your account was intercepted by our protection system and you have been kicked",
+                                     colour=0xFF0000)
+                await member.send(embed=embed)
+                await asyncio.sleep(0.5)
+            except:
+                pass
+
+            try:
+                await self.globalKick(member, reason, member.guild)
+            except Exception as e:
+                print("Failed to kick {} ({})".format(member, member.id))
                 pass
 
     @commands.group()
@@ -324,6 +361,54 @@ class ScamBotProtection(commands.Cog):
             await ctx.channel.send("Unbanned and given passport to user: <@{}>.\nThey will now not be intercepted by the scambot filter".format(strippedUser))
 
     #Bans the user in all servers the bot instance is in
+    async def globalKick(self, user, reason="", priorityserver=None):
+        if (priorityserver != None):
+            try:
+                await priorityserver.kick(discord.Object(id=int(user.id)), reason="Suspected giveaway scam bot")
+            except:
+                pass
+
+        try:
+            for guild in self.bot.guilds:
+                try:
+                    try:
+                        await guild.kick(discord.Object(id=int(user.id)), reason="Suspected giveaway scam bot")
+                    except:
+                        pass
+
+                    try:
+                        description_string = "Kicked user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Creation date:__ {}\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
+                                          user, user.id, str(user.created_at), reason)
+                        if(str(guild.id) == str(self.ownerGuildID)):
+                            description_string = "Kicked user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Creation date:__ {}\n__Original Discord:__ {}\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
+                                user, user.id, str(user.created_at), str(user.guild), reason)
+
+                        scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
+                        embed = Embed(title="Kicked user: {}".format(user),
+                                      description=description_string,
+                                      colour=0x443a59)
+                        embed.set_thumbnail(url=user.avatar_url)
+                        await scambot_channel.send(embed=embed)
+                    except:
+                        try:
+                            description_string = "\*Banned user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
+                                user, user.id, reason)
+
+                            scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
+                            embed = Embed(title="Kicked user: {}".format(user),
+                                          description=description_string,
+                                          colour=0x443a59)
+                            embed.set_thumbnail(url=user.avatar_url)
+                            await scambot_channel.send(embed=embed)
+                        except:
+                            pass
+
+                except:
+                    pass
+
+        except:
+            pass
+
     async def globalBan(self, user, reason="", priorityserver=None):
         if (priorityserver != None):
             try:
