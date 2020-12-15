@@ -374,7 +374,7 @@ class ScamBotProtection(commands.Cog):
                     try:
                         await guild.kick(discord.Object(id=int(user.id)), reason="Suspected giveaway scam bot")
                     except:
-                        pass
+                        continue
 
                     try:
                         description_string = "Kicked user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Creation date:__ {}\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
@@ -422,7 +422,7 @@ class ScamBotProtection(commands.Cog):
                     try:
                         await guild.ban(discord.Object(id=int(user.id)), reason="Suspected giveaway scam bot")
                     except:
-                        pass
+                        continue
 
                     try:
                         description_string = "Banned user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Creation date:__ {}\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
