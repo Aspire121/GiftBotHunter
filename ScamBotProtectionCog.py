@@ -378,10 +378,10 @@ class ScamBotProtection(commands.Cog):
                         continue
 
                     try:
-                        description_string = "Kicked user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Creation date:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
+                        description_string = "Kicked user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Creation date:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in. \nIf you need to allow this user to join the server please use the >passport <id> command_".format(
                                           user, user.id, str(user.created_at))
                         if(str(guild.id) == str(self.ownerGuildID)):
-                            description_string = "Kicked user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Creation date:__ {}\n__Original Discord:__ {}\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
+                            description_string = "Kicked user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Creation date:__ {}\n__Original Discord:__ {}\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in.\nIf you need to allow this user to join the server please use the >passport <id> command__".format(
                                 user, user.id, str(user.created_at), str(user.guild), reason)
 
                         scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
@@ -392,7 +392,7 @@ class ScamBotProtection(commands.Cog):
                         await scambot_channel.send(embed=embed)
                     except:
                         try:
-                            description_string = "\*Banned user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
+                            description_string = "\*Banned user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in.\nIf you need to allow this user to join the server please use the >passport <id> command__".format(
                                 user, user.id)
 
                             scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
@@ -426,10 +426,10 @@ class ScamBotProtection(commands.Cog):
                         continue
 
                     try:
-                        description_string = "Banned user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Creation date:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
+                        description_string = "Banned user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Creation date:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in. \nIf you need to allow this user to join the server please use the >passport <id> command__".format(
                                           user, user.id, str(user.created_at))
                         if(str(guild.id) == str(self.ownerGuildID)):
-                            description_string = "Banned user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Creation date:__ {}\n__Original Discord:__ {}\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
+                            description_string = "Banned user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Creation date:__ {}\n__Original Discord:__ {}\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in. \nIf you need to allow this user to join the server please use the >passport <id> command__".format(
                                 user, user.id, str(user.created_at), str(user.guild), reason)
 
                         scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
@@ -440,7 +440,7 @@ class ScamBotProtection(commands.Cog):
                         await scambot_channel.send(embed=embed)
                     except:
                         try:
-                            description_string = "\*Banned user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in._".format(
+                            description_string = "\*Banned user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in.\nIf you need to allow this user to join the server please use the >passport <id> command__".format(
                                 user, user.id)
 
                             scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
