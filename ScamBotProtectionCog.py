@@ -188,7 +188,8 @@ class ScamBotProtection(commands.Cog):
         InitialValue = True
 
         for word in username_split:
-            InitialValue = InitialValue and self.Dictionary.check(word)
+            if(word):
+                InitialValue = InitialValue and self.Dictionary.check(word)
 
         if(InitialValue):
             #All the words are in a dictionary, set off a flag.
