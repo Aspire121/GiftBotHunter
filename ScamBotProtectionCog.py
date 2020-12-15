@@ -173,9 +173,9 @@ class ScamBotProtection(commands.Cog):
         username_split = username.split(" ")
         InitialValue = True
 
-        createdAt = datetime.date(member.created_at)
-        d1 = datetime.date(2020, 7, 2)
-        d2 = datetime.date(2020, 7, 14)
+        createdAt = member.created_at
+        d1 = datetime(2020, 7, 2)
+        d2 = datetime(2020, 7, 14)
         if(d1 < createdAt < d2):
             try:
                 await self.messageAndKick(member, "Date check")
