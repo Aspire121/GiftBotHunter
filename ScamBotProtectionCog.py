@@ -273,7 +273,7 @@ class ScamBotProtection(commands.Cog):
                 except:
                     continue
             except:
-                pass
+                continue
 
     @commands.group()
     @commands.check(checks.is_aspire)
