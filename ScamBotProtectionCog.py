@@ -386,7 +386,7 @@ class ScamBotProtection(commands.Cog):
                         scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
                         embed = Embed(title="Kicked user: {}".format(user),
                                       description=description_string,
-                                      colour=0x443a59)
+                                      colour=0xadd8e6)
                         embed.set_thumbnail(url=user.avatar_url)
                         await scambot_channel.send(embed=embed)
                     except:
@@ -397,7 +397,7 @@ class ScamBotProtection(commands.Cog):
                             scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
                             embed = Embed(title="Kicked user: {}".format(user),
                                           description=description_string,
-                                          colour=0x443a59)
+                                          colour=0xadd8e6)
                             embed.set_thumbnail(url=user.avatar_url)
                             await scambot_channel.send(embed=embed)
                         except:
