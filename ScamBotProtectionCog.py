@@ -37,7 +37,8 @@ class ScamBotProtection(commands.Cog):
         imagehash.average_hash(Image.open('data/scambot_protection/12.jpg')),
         imagehash.average_hash(Image.open('data/scambot_protection/13.jpg')),
         imagehash.average_hash(Image.open('data/scambot_protection/15.png')),
-        imagehash.average_hash(Image.open('data/scambot_protection/16.png'))
+        imagehash.average_hash(Image.open('data/scambot_protection/16.png')),
+        imagehash.average_hash(Image.open('data/scambot_protection/17.png')),
     ] #Add extra images to this list
     Dictionary = enchant.Dict("en_US")
 
