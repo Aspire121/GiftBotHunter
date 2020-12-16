@@ -75,6 +75,7 @@ class ScamBotProtection(commands.Cog):
     ]
 
     similarityMatch = 7 #Adjust this number. Lower => Image needs to be more similar to one of the blacklisted avatars
+    similarityMatchLax = 16
     similarityRatioPercentFuzzyWords = 0.85
 
     def __init__(self, bot):
@@ -133,11 +134,7 @@ class ScamBotProtection(commands.Cog):
             except Exception as e:
                 print("Error in regex filter match: {}".format(e))
 
-            try:
-                if (await self.runCreationDateJulyCheck(member, username)):
-                    return
-            except Exception as e:
-                print("Error in creation date kick: {}".format(e))
+
 
             try:
                 if (await self.runDictionaryAvatarCreationdate(member, username)):
@@ -165,6 +162,13 @@ class ScamBotProtection(commands.Cog):
             except Exception as e:
                 print(e)
                 pass
+
+            try:
+                if (await self.runCreationDateJulyCheck(member, username)):
+                    return
+            except Exception as e:
+                print("Error in creation date kick: {}".format(e))
+
         except Exception as e:
             print(e)
             pass
@@ -175,13 +179,26 @@ class ScamBotProtection(commands.Cog):
 
         createdAt = member.created_at
         d1 = datetime(2020, 7, 2)
-        d2 = datetime(2020, 7, 14)
+        d2 = datetime(2020, 7, 8)
         if(d1 < createdAt < d2):
             try:
-                await self.messageAndKick(member, "Date check")
-                return True
+                if(member.avatar == None):
+                    await self.messageAndKick(member, "Date check")
+                    return True
+                else:
+                    with requests.get(member.avatar_url) as r:
+                        img_data = r.content
+
+                    user_hash = imagehash.average_hash(Image.open(BytesIO(img_data)))
+                    for hash in self.imagesHashes:
+                        difference = hash - user_hash
+                        if (difference < self.similarityMatchLax):
+                            await self.messageAndKick(member, "Date check")
+                            return True
             except:
                 pass
+
+        return False
 
     async def runDictionaryAvatarCreationdate(self, member, username):
         username_split = username.split(" ")
@@ -380,10 +397,10 @@ class ScamBotProtection(commands.Cog):
                         continue
 
                     try:
-                        description_string = "Kicked user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Creation date:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in. \nIf you need to allow this user to join the server please use the >passport <id> command_".format(
+                        description_string = "Kicked user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Creation date:__ {}\n\n_NOTE: This is a global kick notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in. \nIf you need to allow this user to join the server please use the >passport <id> command_".format(
                                           user, user.id, str(user.created_at))
                         if(str(guild.id) == str(self.ownerGuildID)):
-                            description_string = "Kicked user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Creation date:__ {}\n__Original Discord:__ {}\n__Reason:__ {}\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in.\nIf you need to allow this user to join the server please use the >passport <id> command_".format(
+                            description_string = "Kicked user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n__Creation date:__ {}\n__Original Discord:__ {}\n__Reason:__ {}\n\n_NOTE: This is a global kick notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in.\nIf you need to allow this user to join the server please use the >passport <id> command_".format(
                                 user, user.id, str(user.created_at), str(user.guild), reason)
 
                         scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
@@ -394,7 +411,7 @@ class ScamBotProtection(commands.Cog):
                         await scambot_channel.send(embed=embed)
                     except:
                         try:
-                            description_string = "\*Banned user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n_NOTE: This is a global ban notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in.\nIf you need to allow this user to join the server please use the >passport <id> command_".format(
+                            description_string = "\*Banned user __{} ({})__ for suspected giveaway scambot / highly suspicious account.\n\n_NOTE: This is a global kick notice (the bot bans in all the servers it is in) and does not necessarily mean this user joined the server you are seeing this message in.\nIf you need to allow this user to join the server please use the >passport <id> command_".format(
                                 user, user.id)
 
                             scambot_channel = [ch for ch in guild.text_channels if ch.name == 'scambot-logs'][0]
