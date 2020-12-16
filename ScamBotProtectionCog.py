@@ -270,9 +270,11 @@ class ScamBotProtection(commands.Cog):
                                   description=string_final,
                                   colour=0xFFD700)
                     await scambot_channel.send(embed=embed)
-                except:
+                except Exception as e:
+                    print(e)
                     continue
-            except:
+            except Exception as e:
+                print(e)
                 continue
 
     @commands.group()
