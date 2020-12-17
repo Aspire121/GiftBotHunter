@@ -47,7 +47,8 @@ class ScamBotProtection(commands.Cog):
 
     regexPatterns = [
         "rocket(?: |_|-|)league(?: |_|-|)bot",
-        "rocket(?: |_|-|)league"
+        "rocket(?: |_|-|)league",
+        "rocket(?: |_|-|)"
         "gift(?:s)?",
         "giveaway(?:s)?",
         "reward(?:s)?",
