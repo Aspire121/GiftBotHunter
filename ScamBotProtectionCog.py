@@ -220,7 +220,7 @@ class ScamBotProtection(commands.Cog):
                 if(member.avatar == None):
                     #No avatar, it's a scam bot.
                     #Ban
-                    await self.messageAndBan(member, "Avatar and name check (+ Account less than a week old)")
+                    await self.messageAndKick(member, "Avatar and name check (+ Account less than a week old)")
                     return True
 
     async def runRegexFilters(self, member, username):
